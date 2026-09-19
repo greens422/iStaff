@@ -18,8 +18,14 @@ export function Shell({ profile, children }: { profile: Profile; children: React
         <Link href="/events" className="text-lg font-semibold text-brand">
           iStaff
         </Link>
-        <nav className="flex items-center gap-4 text-sm">
+        <nav aria-label="Main" className="flex flex-wrap items-center justify-end gap-x-4 gap-y-1 text-sm">
+          <Link href="/events">Hub</Link>
+          {profile.role === "staff" && <Link href="/schedule">My Schedule</Link>}
+          <Link href="/ask">Ask</Link>
+          <Link href="/messages">Messages</Link>
+          {profile.role === "staff" && <Link href="/profile">Profile</Link>}
           {profile.role === "coordinator" && <Link href="/events/new">Post event</Link>}
+          {profile.role === "coordinator" && <Link href="/certifications">Certifications</Link>}
           <span className="text-muted">{profile.name}</span>
           <form action={signOut}>
             <button className="underline">Sign out</button>

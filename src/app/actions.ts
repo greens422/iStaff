@@ -4,7 +4,15 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { SESSION_COOKIE, requireProfile } from "@/lib/session";
-import { createEvent, decideApplication, expressInterest, getProfile } from "@/lib/store";
+import {
+  addCertification,
+  createEvent,
+  decideApplication,
+  expressInterest,
+  getProfile,
+  reviewCertification,
+  sendMessage,
+} from "@/lib/store";
 import type { InterestResult } from "@/lib/store";
 
 export async function signIn(formData: FormData): Promise<void> {
@@ -61,4 +69,28 @@ export async function decide(
   await requireProfile("coordinator");
   await decideApplication(applicationId, status);
   revalidatePath(`/events/${eventId}/applicants`);
+}
+
+export async function uploadCertification(formData: FormData): Promise<void> {
+  const staff = await requireProfile("staff");
+  const file = formData.get("file");
+  if (!(file instanceof File)) throw new Error("Choose a file to upload.");
+  await addCertification(staff.id, String(formData.get("name") ?? ""), {
+    name: file.name,
+    bytes: Buffer.from(await file.arrayBuffer()),
+  });
+  revalidatePath("/profile");
+}
+
+export async function reviewCert(certId: string, status: "verified" | "rejected"): Promise<void> {
+  const coordinator = await requireProfile("coordinator");
+  await reviewCertification(certId, coordinator.id, status);
+  revalidatePath("/certifications");
+}
+
+export async function postMessage(formData: FormData): Promise<void> {
+  const me = await requireProfile();
+  const to = String(formData.get("to"));
+  await sendMessage(me.id, to, String(formData.get("body") ?? ""));
+  revalidatePath("/messages");
 }

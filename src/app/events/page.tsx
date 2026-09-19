@@ -2,6 +2,7 @@ import Link from "next/link";
 import { requireProfile } from "@/lib/session";
 import { readDb } from "@/lib/store";
 import { describeRange } from "@/lib/conflicts";
+import { isVerified } from "@/lib/certs";
 import { Shell, outlineButtonClass } from "../ui";
 import { InterestButton } from "./InterestButton";
 
@@ -9,7 +10,7 @@ export const dynamic = "force-dynamic";
 
 export default async function HubPage() {
   const profile = await requireProfile();
-  const { events, applications } = await readDb();
+  const { events, applications, certifications } = await readDb();
   const mine = new Map(
     applications.filter((a) => a.staffId === profile.id).map((a) => [a.eventId, a.status]),
   );
@@ -35,6 +36,18 @@ export default async function HubPage() {
               {event.requiredCertifications.length > 0 &&
                 ` · Needs: ${event.requiredCertifications.join(", ")}`}
             </p>
+            {profile.role === "staff" && event.requiredCertifications.length > 0 && (
+              <ul className="mt-3 space-y-1 text-sm" aria-label="Your requirements">
+                {event.requiredCertifications.map((name) => {
+                  const ok = isVerified(certifications, profile.id, name);
+                  return (
+                    <li key={name} className={ok ? "text-ok" : "text-danger"}>
+                      {ok ? "✓" : "✗"} {name} {ok ? "verified" : "not verified"}
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
             <div className="mt-4">
               {profile.role === "staff" ? (
                 <InterestButton eventId={event.id} applied={mine.has(event.id)} />
