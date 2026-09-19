@@ -1,4 +1,5 @@
 import { promises as fs } from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
 import { findConflict, describeRange } from "./conflicts";
@@ -23,7 +24,9 @@ export function uploadsDir(): string {
 }
 
 function dataFile(): string {
-  return process.env.ISTAFF_DATA_FILE ?? path.join(process.cwd(), ".data", "db.json");
+  if (process.env.ISTAFF_DATA_FILE) return process.env.ISTAFF_DATA_FILE;
+  const root = process.env.VERCEL ? os.tmpdir() : process.cwd();
+  return path.join(root, ".data", "db.json");
 }
 
 export async function readDb(): Promise<Database> {
