@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-canvas: #f6f5f1;
+  --color-surface: #ffffff;
+  --color-ink: #1c1b19;
+  --color-muted: #6b6860;
+  --color-line: #e2dfd6;
+  --color-brand: #2f5d50;
+  --color-brand-ink: #ffffff;
+  --color-danger: #b3261e;
+  --color-ok: #2e7d32;
+  --radius-card: 14px;
+  --radius-control: 10px;
+}
+
+body {
+  background: var(--color-canvas);
+  color: var(--color-ink);
+}
