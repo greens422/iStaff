@@ -15,7 +15,8 @@ export function Shell({ profile, children }: { profile: Profile; children: React
   return (
     <div className="mx-auto max-w-2xl px-4 pb-16">
       <header className="flex items-center justify-between py-5">
-        <Link href="/events" className="text-lg font-semibold text-brand">
+        <Link href="/events" className="flex items-center gap-2 text-lg font-semibold text-ink">
+          <img src="/icon.png" alt="" className="h-7 w-7 rounded-md" />
           iStaff
         </Link>
         <nav aria-label="Main" className="flex flex-wrap items-center justify-end gap-x-4 gap-y-1 text-sm">
