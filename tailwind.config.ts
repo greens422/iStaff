@@ -16,6 +16,10 @@ const config: Config = {
         ok: "var(--color-ok)",
       },
       borderRadius: { card: "var(--radius-card)", control: "var(--radius-control)" },
+      fontFamily: {
+        sans: ["var(--font-manrope)", "system-ui", "sans-serif"],
+        heading: ["var(--font-heading)", "system-ui", "sans-serif"],
+      },
     },
   },
   plugins: [],
